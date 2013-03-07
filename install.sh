@@ -26,7 +26,7 @@ case "$`echo 1`" in
     ;;
   stop)
     echo "Stopping rpimon"
-    killall $SCRIPT_FILE
+    kill -9 \`ps -ef | grep collect.sh | grep -v grep | awk '{print $`echo 2`}' 2>/dev/null\`
     ;;
   *)
     echo "Usage: /etc/init.d/rpimon {start|stop}"
