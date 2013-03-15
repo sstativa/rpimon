@@ -21,12 +21,13 @@ cat >/etc/init.d/rpimon << EOF
 
 case "$`echo 1`" in
   start)
+    kill -9 \`ps -ef | grep $SCRIPT_FILE | grep -v grep | awk '{print $`echo 2`}'\` 2>/dev/null
     echo "Starting rpimon"
     $SCRIPT_FILE &
     ;;
   stop)
     echo "Stopping rpimon"
-    kill -9 \`ps -ef | grep collect.sh | grep -v grep | awk '{print $`echo 2`}' 2>/dev/null\`
+    kill -9 \`ps -ef | grep $SCRIPT_FILE | grep -v grep | awk '{print $`echo 2`}'\` 2>/dev/null
     ;;
   *)
     echo "Usage: /etc/init.d/rpimon {start|stop}"

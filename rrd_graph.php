@@ -47,9 +47,32 @@ function mem_graph($period) {
             "--lower-limit", "0",
             "--imgformat", "PNG", "--width", "480", "--height", "200",
             "--border=0",
-            "--vertical-label", "bytes",
+            "--vertical-label", "Bytes",
             "--units-exponent", "0",
             "--title", "Free Memory"
+            );
+        if ($period > 7200) {
+            $opts[] = "--slope-mode";
+        }
+        rrd_graph($img_file, $opts);
+    }
+    return $img_file;
+}
+
+function du_graph($period) {
+    $rrd_file = "/var/www/rpimon/rpi.rrd";
+    $img_file = "img/du_{$period}.png";
+
+    if (!file_exists($img_file) || filemtime($rrd_file) > filemtime($img_file)) {
+        $opts = array(
+            "--start", "end-{$period}s", "--end", -time() % 60,
+            "DEF:du=".$rrd_file.":du:AVERAGE",
+            "LINE:du#6855DD:du",
+            "GPRINT:du:LAST:Used space\: %2.1lf GB",
+            "--imgformat", "PNG", "--width", "480", "--height", "200",
+            "--border=0",
+            "--vertical-label", "GB",
+            "--title", "Used Space"
             );
         if ($period > 7200) {
             $opts[] = "--slope-mode";

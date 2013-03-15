@@ -18,6 +18,7 @@ if (isset($_GET["id"])){
 } else {
     echo "<a href=\"index.php?id=cpu_graph\"><img src=" . cpu_graph(3600 * 2) . " /></a><br/>\n";
     echo "<a href=\"index.php?id=mem_graph\"><img src=" . mem_graph(3600 * 2) . " /></a><br/>\n";            
+    echo "<a href=\"index.php?id=du_graph\"><img src=" . du_graph(3600 * 2) . " /></a><br/>\n";
     echo "<a href=\"index.php?id=cpu_temp_graph\"><img src=" . cpu_temp_graph(3600 * 2) . " /></a><br/>\n";
     if (file_exists($ENV_TEMP_FILE)) {
         echo "<a href=\"index.php?id=env_temp_graph\"><img src=" . env_temp_graph(3600 * 2) . " /></a><br/>\n";

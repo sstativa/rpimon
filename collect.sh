@@ -13,6 +13,7 @@ if [ ! -f $RPI_RRD ]; then
     DS:free:GAUGE:120:0:U \
     DS:buffers:GAUGE:120:0:U \
     DS:cached:GAUGE:120:0:U \
+    DS:du:GAUGE:120:0:U \
     DS:temp:GAUGE:120:0:U \
     RRA:AVERAGE:0.5:1:120 \
     RRA:AVERAGE:0.5:3:480 \
@@ -61,9 +62,12 @@ while : ; do
     stat=(`head -n 1 /proc/stat`)
     # Memory
     mem=(`head -n 4 /proc/meminfo | awk '{print $2}'`)
+    # Used space of rootfs
+    du=`df -k | grep rootfs | awk '{print $3 / 1048576}'`
     # CPU temperature
     temp=`cat /sys/class/thermal/thermal_zone0/temp | awk '{print $1/1000}'`
-    rrdupdate $RPI_RRD N:${stat[1]}:${stat[2]}:${stat[3]}:${mem[1]}:${mem[2]}:${mem[3]}:$temp  
+
+    rrdupdate $RPI_RRD N:${stat[1]}:${stat[2]}:${stat[3]}:${mem[1]}:${mem[2]}:${mem[3]}:$du:$temp  
     
     # shutdown if the CPU temperature is too high
     if [ `echo $temp |cut -d "." -f1` -ge 75 ]; then
