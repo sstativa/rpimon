@@ -31,7 +31,7 @@ if [ -e /sys/bus/w1/devices/28-*/w1_slave ]; then
 fi
 
 # create $ENV_RRD file if DS18B20 is connected but file does not exist
-if [ $has_ds18b20 == "TRUE" ] && [ ! -f $ENV_RRD ]; then
+if [ "$has_ds18b20" == "TRUE" ] && [ ! -f $ENV_RRD ]; then
   rrdtool create $ENV_RRD --step 60 \
     DS:temp:GAUGE:120:0:U \
     RRA:AVERAGE:0.5:1:120 \
@@ -46,7 +46,7 @@ if [ $? -eq 0 ]; then
 fi
 
 # create $HDD_RRD file if it does not exist and smartctl is available
-if [ $has_smartctl == "TRUE" ] && [ ! -f $HDD_RRD ]; then
+if [ "$has_smartctl" == "TRUE" ] && [ ! -f $HDD_RRD ]; then
   rrdtool create $HDD_RRD --step 60 \
     DS:temp:GAUGE:120:0:U \
     RRA:AVERAGE:0.5:1:120 \
@@ -75,13 +75,13 @@ while : ; do
         shutdown -h now
     fi
 
-    if [ $has_ds18b20 == "TRUE" ]; then
+    if [ "$has_ds18b20" == "TRUE" ]; then
         # DS18B20 temperature
         temp=`cat /sys/bus/w1/devices/28-*/w1_slave | grep t= | awk -F "=" '{print $2/1000}'`
         rrdupdate $ENV_RRD N:$temp
     fi
 
-    if [ $has_smartctl == "TRUE" ]; then
+    if [ "$has_smartctl" == "TRUE" ]; then
         # HDD temperature 
         temp=`smartctl -A /dev/sda | grep Temperature | awk '{print $10}'`
         rrdupdate $HDD_RRD N:$temp

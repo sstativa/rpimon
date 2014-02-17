@@ -22,7 +22,7 @@ sudo usermod -a -G www-data pi
 
 ### Installation of rrdtool
 ~~~
-sudo apt-get install -y rrdtool
+sudo apt-get install -y rrdtool php5-rrd
 ~~~
 
 ### Installation of smartmontools (Optional)
